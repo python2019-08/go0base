@@ -4,108 +4,83 @@ https://www.bilibili.com/video/BV1Y26GYhEGq?spm_id_from=333.788.videopod.episode
 ==================================================  
 # 1.【golang框架】大厂都在使用的命令行项目框架cobra
 01:28:27
+https://www.bilibili.com/video/BV1Y26GYhEGq?spm_id_from=333.788.videopod.episodes&vd_source=4212b105520112daf65694a1e5944e23&p=23
+
 
 
 ==================================================
+
 # 2.【golang框架】gin框架实现统一鉴权与api版本控制
 01:28:03
+https://www.bilibili.com/video/BV1Y26GYhEGq?spm_id_from=333.788.videopod.episodes&vd_source=4212b105520112daf65694a1e5944e23&p=24
+## 2.0本节内容
+> 1.RESTful api 设计
+> 2.路由分组实现api版本控制
+> 3.中间件拦截请求实现统一鉴权
+> 4.模型绑定与验证
+ ![images_03gofw/go-docs.png](images_03gofw/go-docs.png)
+
+## 2.1 RESTful api 设计
+ ![images_03gofw/RESTful-api.png](images_03gofw/RESTful-api.png)
+06:26
+
+course增删改查
+user注册登录
+## 2.2 下载 gin框架
+```sh
+go get github.com/gin-gonic/gin
+```
+## 2.3 简单的code
+
+ ![gin-simple-demo](images_03gofw/gin-simple-demo.png)
+
+## 2.4 api版本控制code  
+    fw-gin-test/*
+### 2.4.1 api版本控制
+v1/course post
+v7/course post
+v8/course post
+其中，api版本控制的代码示例 ： fw-gin-test/routes/course.go
+
+## 2.5 中间件统一鉴权
+53:49
+
+```go 
+// fw-gin-test/routes/course.go
+func initCourse(r *gin.Engine) { 
+	v1 := r.Group("/v1", middleware.TokenCheck, middleware.AuthCheck)
+  // .....
+  v2 := r.Group("/v2", middleware.AuthCheck)
+  // .....
+}
+```
+
+或者全局中间件
+```go
+// fw-gin-test/routes/routes.go
+func InitRoutes(r *gin.Engine) {
+	 r.Use(...) // 全局中间件注册
+}
+```
+
+1:02:59
+
+
+
+
 
 ==================================================
 # 3.【golang框架】基于go-kit工具集理解微服务开发
 02:35:10 
-1.基于中间件编程
-2.服务的限流与熔断
-3.服务链路追踪及透传
-## 3.1 github.com/go-kit 
-  https://github.com/go-kit/kit.git 
-
 GitHub 上的 **go-kit** 是一个基于 Go 语言的微服务框架，专注于提供简洁、可复用的工具和模式，帮助开发者构建模块化、可维护的微服务系统。  
 
-
-### 3.1.1**核心特点**
-- **轻量级设计**：不强制架构约束，仅提供基础组件（如服务接口定义、中间件等），灵活性高。  
-- **接口抽象**：通过定义统一的服务接口（如 `Service` 接口），分离业务逻辑与技术实现（如网络传输、日志等）。  
-- **中间件机制**：支持通过中间件链式调用添加横切关注点（如认证、监控、超时处理），代码结构清晰。  
-- **多协议支持**：内置 HTTP、gRPC 等传输层实现，方便服务间通信与对外暴露接口。  
-
-### 3.1.2**典型应用场景**
-- 构建微服务架构中的独立服务模块。  
-- 为服务添加可复用的功能（如日志记录、错误处理）。  
-- 统一服务接口定义，便于团队协作和服务治理。
-
-### 3.1.3**使用示例（简化版）**
-(1). **定义服务接口**  
-```go
-type UserService interface {
-    GetUser(id string) (User, error)
-    CreateUser(user User) error
-}
-```
-
-(2). **实现业务逻辑**  
-```go
-type userService struct {
-    // 依赖注入数据库等资源
-}
-
-func (s *userService) GetUser(id string) (User, error) {
-    // 业务逻辑
-}
-```
-
-(3). **添加中间件**  
-```go
-func LoggingMiddleware(logger log.Logger) Middleware {
-    return func(next UserService) UserService {
-        return &loggingUserService{logger, next}
-    }
-}
-```
-
-(4). **服务封装与暴露**  
-```go
-// HTTP 服务
-httpHandler := httptransport.NewServer(
-    service,
-    decodeRequest,
-    encodeResponse,
-)
-```
-
-
-### 3.1.4**在 GitHub 上的资源**
-- **仓库地址**：[github.com/go-kit/kit](https://github.com/go-kit/kit)  
-- **文档**：仓库内包含详细的使用指南、示例代码和 API 说明。  
-- **社区**：适合 Go 语言开发者学习微服务设计模式，或直接用于生产环境的服务架构搭建。  
-
-如果需要具体功能的实现细节，可以进一步探讨！
-
-
-### 3.1.4go-kit 的主要优点和缺点  
-
-#### 3.1.4.1.**优点：轻量级与灵活性的设计**  
-1. **非侵入式架构**：不强制绑定特定技术栈，仅提供基础组件（如服务接口、中间件），开发者可自由选择数据库、通信协议等，适配不同项目需求。  
-2. **接口抽象清晰**：通过定义统一的 `Service` 接口分离业务逻辑与技术实现，代码结构更模块化，便于测试和维护。  
-3. **中间件机制强大**：支持链式调用中间件（如日志、认证、超时处理），横切关注点代码可复用，避免业务逻辑混杂。  
-4. **多协议支持**：内置 HTTP、gRPC、Thrift 等传输层实现，服务可同时暴露多种接口，方便与不同系统集成。  
-5. **学习成本低**：框架设计贴近 Go 语言原生风格，无复杂概念，适合已有 Go 基础的开发者快速上手。  
-
-
-#### 3.1.4.2**缺点：工程化与生态的局限性**  
-1. **缺乏完整生态**：相比 Spring Cloud 等成熟微服务框架，go-kit 不包含服务注册发现、配置中心等完整生态组件，需手动集成第三方库（如 Consul、etcd）。  
-2. **代码模板化较重**：为实现接口抽象和中间件机制，需编写较多模板代码（如服务接口定义、传输层封装），可能增加开发量。  
-3. **服务治理能力弱**：原生不支持熔断、限流、负载均衡等高级治理功能，需结合其他库（如 Hystrix-Go、gRPC 负载均衡）实现。  
-4. **文档和示例有限**：核心文档偏向基础用法，复杂场景（如微服务分层架构、多服务协作）的最佳实践案例较少，需社区探索。  
-5. **性能非最优选择**：作为通用框架，在极致性能场景下（如高并发 API 服务），可能不如针对特定场景优化的库（如直接使用 net/http 或 gRPC）。  
-
-
-#### 3.1.4.3**总结：适用场景与权衡**  
-- **适合场景**：中小型微服务项目、需要高度定制化架构的项目，或希望通过框架学习微服务设计模式的团队。  
-- **注意点**：若项目需求复杂（如需要完整服务治理、快速落地），建议结合 go-kit 与生态组件（如 go-zero、Kubernetes），或评估其他更集成化的框架（如 Apache Dubbo Go）。
-   
-
-
-
+## 3.0 本节内容
+> 1.基于中间件编程
+> 2.服务的限流与熔断
+> 3.服务链路追踪及透传
+## 3.1 github.com/go-kit 
+  https://github.com/go-kit/kit.git 
+  
 ## 3.2 授权 auth 
 https://github.com/go-kit/kit/tree/master/auth 
 
@@ -606,7 +581,9 @@ name:"nick"  addr:{province:"湖南"  city:"长沙"}  birthday:{seconds:17490256
 
 ==================================================
 # 7.【golang框架】最受欢迎的开源日志框架logrus实战应用
-02:09:33
+02:09:33 
+https://www.bilibili.com/video/BV1Y26GYhEGq/?spm_id_from=333.788.videopod.episodes&vd_source=4212b105520112daf65694a1e5944e23&p=29
+
 ## 7.1本节内容
 > 1.为什么需要打印日志，解决哪些问题
 > 2.logrus基本操作与hook使用
@@ -625,6 +602,56 @@ name:"nick"  addr:{province:"湖南"  city:"长沙"}  birthday:{seconds:17490256
 ==================================================
 # 8.【golang框架】OpenTelemetry分布式链路追踪与监控
 01:52:17
+https://www.bilibili.com/video/BV1Y26GYhEGq?spm_id_from=333.788.videopod.episodes&vd_source=4212b105520112daf65694a1e5944e23&p=30
+
+## 8.0本节内容
+> 1.OpenTelemetry是什么能做什么
+> 2.OpenTelemetry关键概念
+> 3.SDK采集服务追踪数据
+> 4.SDK采集服务监控数据
+
+## 8.1为什么需要分布式追踪
+> 1.分布式+微服务的场景下，数据流比较复杂，不容易定位错误
+>    （单机应用，代码的调用链路十分清晰，不需要分布式追踪）    
+> 2.监控数据的采集，按服务采集（服务器性能监控数据，业务数据监控）
+> 
+## 8.2 OpenTelemetry是什么 
+ ![what-is-OpenTelemetry](images_03gofw/what-is-OpenTelemetry.png)
+
+> 1.和提供商无关开源的可观测性框架，用于检测、生成、收集和导出遥测数据（追踪，metrics，日志）
+> 2.目的提供一套标准的SDk和provider无关
+> 3.由openTracing和openCensus开源项目合并而来,
+> 4.可接入 openTracing、openCensus 以及 zipkin、jaeger
+
+ opentelemetry-go的github地址：
+[opentelemetry-go/](https://github.com/open-telemetry/opentelemetry-go.git)
+
+## 8.3 OpenTelemetry关键概念
+追踪的相关概念
+> 1.TracerProvider：是Tracer的工厂，用于创建tracer
+> 2.Tracer:跟踪程序，用于创建Span。
+> 3.TraceExporter：追踪数据导出器。
+> 4.ContextPropagation：上下文用于保存数据，传播序列化或反序列化上下文
+> 5.Span:跨度，表示一个工作或者操作单元(abner注：常指 方法)
+
+
+Metrics（abner注：监控指标、度量）相关概念
+> 1.MeterProvider：mter的工厂，用于创建meter对象
+> 2.Meter：仪表，在运行时捕获服务的测量值。
+> 3.MetricExporter：度量数据导出器
+> 4.Metric类型：Counter，实时指标，直方图
+
+Attributes,Resource
+
+
+使用流程：
+> 1.应用程序启动，创建provider
+> 2.每一个流程，通过provider创建tracer或者meter
+> 3.每个方法一个通过tracer创建span，方法结束span结束
+
+## 8.4 SDK 采集 服务追踪数据
+48:52
+
 
 ==================================================
 # 9.【golang框架】go开源验证框架validator必会的3个操作
