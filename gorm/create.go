@@ -49,7 +49,7 @@ func CreateRecord() {
 
 	// 反向选择
 	t2 := teacherTemp
-	res = DB.Select("Email", "Birthday").Create(&t2)
+	res = DB.Omit("Email", "Birthday").Create(&t2)
 	Println("CreateRecord():", res.RowsAffected, res.Error, t2)
 
 	// 批量操作 //docs/images/db-CreateInBatches.png

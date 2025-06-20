@@ -27,7 +27,7 @@ func init() {
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
-		log.Fatalln(err)
+		// log.Fatalln(err)
 	}
 
 	// set connection pool

@@ -23,7 +23,7 @@
             "mode": "exec",
             "program": "${fileDirname}/go0base",
             "env": {},
-            "args": []
+            "args": ["ai"]
         }    
     ]
 }

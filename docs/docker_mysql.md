@@ -8,7 +8,7 @@ About "docker install mysql", please see [docker-install-mysql](https://www.runo
 
 a@Ubuntu22:~$ docker run -itd --name mysql-test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
 
-a@Ubuntu22:~$ docker ps
+a@Ubuntu22:~$ docker ps -a
 
 a@Ubuntu22:~$ mysql -h 127.0.0.1 -P 3306 -u root -p
 

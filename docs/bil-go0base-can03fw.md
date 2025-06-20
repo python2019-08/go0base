@@ -1,12 +1,41 @@
 # 2025年最新Golang保姆级公开课教程-零基础也可学！（完整版）
 2024-12-31 14:17:39
 https://www.bilibili.com/video/BV1Y26GYhEGq?spm_id_from=333.788.videopod.episodes&vd_source=4212b105520112daf65694a1e5944e23&p=26
+
 ==================================================  
 # 1.【golang框架】大厂都在使用的命令行项目框架cobra
 01:28:27
 https://www.bilibili.com/video/BV1Y26GYhEGq?spm_id_from=333.788.videopod.episodes&vd_source=4212b105520112daf65694a1e5944e23&p=23
 
+## 1.1 user_guide.md
+https://github.com/spf13/cobra/blob/main/site/content/user_guide.md
 
+`docs/bil-go0base-can03fw01cobra_user_guide.md`
+
+typically a Cobra-based application will follow the following organizational structure:
+```txt
+▾ appName/
+  ▾ cmd/
+      add.go
+      your.go
+      commands.go
+      here.go
+  main.go
+```
+
+
+Organizing subcommands
+```
+├── cmd
+│   ├── root.go
+│   └── sub1
+│       ├── sub1.go
+│       └── sub2
+│           ├── leafA.go
+│           ├── leafB.go
+│           └── sub2.go
+└── main.go
+```
 
 ==================================================
 
@@ -72,21 +101,48 @@ func InitRoutes(r *gin.Engine) {
 ==================================================
 # 3.【golang框架】基于go-kit工具集理解微服务开发
 02:35:10 
+https://www.bilibili.com/video/BV1Y26GYhEGq?spm_id_from=333.788.videopod.episodes&vd_source=4212b105520112daf65694a1e5944e23&p=25
+
 GitHub 上的 **go-kit** 是一个基于 Go 语言的微服务框架，专注于提供简洁、可复用的工具和模式，帮助开发者构建模块化、可维护的微服务系统。  
 
 ## 3.0 本节内容
 > 1.基于中间件编程
 > 2.服务的限流与熔断
-> 3.服务链路追踪及透传
-## 3.1 github.com/go-kit 
-  https://github.com/go-kit/kit.git 
-  
-## 3.2 授权 auth 
-https://github.com/go-kit/kit/tree/master/auth 
+> 3.服务链路追踪及透传。 ![透传即跨服务的操作](images_03gofw/gokit-touchuan.png) 。
 
-三种鉴权方案：
-![images/go-kit--kit--auth.png](images/go-kit--kit--auth.png)
-03:06
+## 3.1 微服务需要哪些基础功能
+  https://github.com/go-kit/kit.git 
+
+微服务需要哪些基础功能：
+1.鉴权(auth) : 
+    https://github.com/go-kit/kit/tree/master/auth 
+    三种鉴权方案：![images/go-kit--kit--auth.png](images/go-kit--kit--auth.png)   
+2.服务熔断: circuitbreaker ， 如 一定时间内服务报错次数达到一定阈值 
+        https://github.com/go-kit/kit/tree/master/circuitbreaker
+     另外，一个登录接口就是一个endpoint ：  https://github.com/go-kit/kit/tree/master/endpoint
+3.日志打印： https://github.com/go-kit/kit/tree/master/log  
+            ![gokit-log](images_03gofw/gokit-log.png)
+
+4.服务指标采集、系统监控：metrics，    https://github.com/go-kit/kit/tree/master/metrics
+                 metrics包含 各种系统监控的方案，包括 prometheus、influx等
+
+5.限流： [ratelimit](https://github.com/go-kit/kit/tree/master/ratelimit) 
+        不限流，会导致服务雪崩。
+6.服务注册和发现 ：sd（service discovery）。https://github.com/go-kit/kit/tree/master/sd        
+        ![gokit-sd](images_03gofw/gokit-sd.png)
+       remark: 如果用k8s的话，就无须 gokit的sd、ratelimit、circuitbreaker了。k8s有自己的service环境变量和dns服务发现 功能
+7.链路追踪 ： 已经被合并到OpenTelemetry里， https://github.com/go-kit/kit/tree/master/tracing不再用了。
+           ![gokit-tracing](images_03gofw/gokit-tracing.png )
+8.传输协议： https://github.com/go-kit/kit/tree/master/transport  ,包括 amqp、grpc、http、nats等
+
+25:45
+
+## 3.2 鉴权 auth 
+ 
+
+ 
+
+
 
 ======================================================
 # 4.【golang框架】gorm 4个优势与4个弊端我们该如何选择
