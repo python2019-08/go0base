@@ -46,6 +46,9 @@ func NewApp() *App {
 	var aiCmd = newAiCommand()
 	app.rootCmd.AddCommand(aiCmd.cmd)
 
+	var prj05 = newPrj05Command()
+	app.rootCmd.AddCommand(prj05.cmd)
+
 	return app
 }
 
